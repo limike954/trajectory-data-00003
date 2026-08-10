@@ -134,6 +134,7 @@ class GroupResponse(BaseSchema):
 class FolderCreateRequest(BaseModel):
     display_name: str
     parent_id: Optional[int] = None
+    storage_provider: Optional[str] = None
 
 
 class FolderUpdateRequest(BaseModel):
@@ -157,6 +158,7 @@ class FolderCreate(BaseSchema):
 class FolderResponse(BaseSchema):
     display_name: str
     description: Optional[str]
+    storage_provider: Optional[str] = None
     uuid: UUID
     user: UserResponseCompact
     parent: Optional["FolderResponse"] = None

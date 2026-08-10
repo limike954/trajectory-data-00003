@@ -48,6 +48,7 @@ class Folder(BaseModel):
 
     display_name: Mapped[str] = mapped_column(UnicodeText, index=True)
     description: Mapped[Optional[str]] = mapped_column(UnicodeText, index=False)
+    storage_provider: Mapped[Optional[str]] = mapped_column(UnicodeText, index=True)
     uuid: Mapped[uuid_module.UUID] = mapped_column(UUID(as_uuid=True))
 
     # Relationships
