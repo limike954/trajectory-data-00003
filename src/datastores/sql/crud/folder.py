@@ -15,10 +15,12 @@
 import os
 import uuid
 
+from fastapi import HTTPException
 from sqlalchemy import and_, func, select, union, update
 from sqlalchemy.orm import Session, aliased
 
 from api.v1 import schemas
+from config import get_config
 from datastores.sql.models.file import File
 from datastores.sql.models.folder import Folder
 from datastores.sql.models.group import Group, GroupRole
@@ -283,8 +285,16 @@ def create_root_folder_in_db(
     Returns:
         Folder: folder
     """
+    storage_providers = get_config().get("server", {}).get("storage", {}).get("providers", {})
+    default_storage_provider = storage_providers.get("default")
+    storage_provider = new_folder.storage_provider or default_storage_provider
+
+    if storage_provider not in storage_providers:
+        raise HTTPException(status_code=400, detail="Invalid storage provider.")
+
     new_db_folder = Folder(
         display_name=new_folder.display_name,
+        storage_provider=storage_provider,
         uuid=uuid.uuid4(),
         user=current_user,
         parent_id=None,
